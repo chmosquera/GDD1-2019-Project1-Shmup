@@ -11,6 +11,7 @@ public class PlayerScript : MonoBehaviour
     private Vector2 _movement;
     private Rigidbody2D _rbComponent;
 
+
     // Update is called once per frame
     void Update()
     {
@@ -28,12 +29,18 @@ public class PlayerScript : MonoBehaviour
         shoot |= Input.GetButtonDown("Fire2");
 
         if (shoot) {
-            WeaponScript weapon = GetComponent<WeaponScript>();
-            if (weapon != null) {
+            WeaponScript[] weapons = GetComponentsInChildren<WeaponScript>();
+            foreach (WeaponScript weapon in weapons) {
 
-                weapon.Attack(false);
+                if (weapon != null) {
+
+                    weapon.Attack(false);
+                }
             }
+
         }
+
+
 
     }
 
@@ -60,8 +67,14 @@ public class PlayerScript : MonoBehaviour
             HealthScript my_health = GetComponent<HealthScript>();
             if (my_health != null) {
                 my_health.Damage(1);
+                SoundEffectsHelper.instance.MakePlayerShotSound();
             }
         }
+    }
+
+    void OnDestroy() {
+        var gameOver = FindObjectOfType<GameOverScript>();
+        gameOver.ShowButtons();
     }
 
 }

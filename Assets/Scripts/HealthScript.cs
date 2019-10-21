@@ -16,10 +16,35 @@ public class HealthScript : MonoBehaviour
     /// </summary>
     public void Damage(int damageCount) {
         hp -= damageCount;
+        SoundEffectsHelper.instance.MakeEnemyShotSound();
 
         if (hp <= 0) {
+            SpecialEffectsHelper.instance.Explosion(transform.position);
+            SoundEffectsHelper.instance.MakeExplosionSound();
             Destroy(gameObject);
         }
+    }
+
+    IEnumerator Freeze(float seconds) {
+        MoveScript movement = GetComponent<MoveScript>();
+
+        // if there is a movement script, freeze the movement
+        if (movement != null) {
+
+            // Save the original speed
+            Vector3 originalSpeed = movement.speed;
+
+            // Freeze! Stop the movement
+            movement.speed = new Vector3(0,0,0);
+
+            // Wait
+            yield return new WaitForSeconds(seconds);
+
+            // Okay, unfreeze!
+            movement.speed = originalSpeed;
+        }
+
+        yield return null;
     }
 
     void OnTriggerEnter2D(Collider2D other) {
@@ -30,7 +55,12 @@ public class HealthScript : MonoBehaviour
             // Avoid friendly fire
             if (shot.isEnemyShot != isEnemy) {
 
+                if (shot.isIce) {
+                    StartCoroutine(Freeze(2f));
+                } 
+                
                 Damage(shot.damage);
+               
 
                 // Destroy the shot
                 Destroy(shot.gameObject);

@@ -10,6 +10,8 @@ public class ShotScript : MonoBehaviour
 
     [Tooltip("Projectile damage player or enemies?")]
     public bool isEnemyShot = false;
+
+    public bool isIce = false;
     
     void Start()
     {
