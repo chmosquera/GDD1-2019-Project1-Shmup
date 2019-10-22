@@ -122,7 +122,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 1
-  isEnemyShot: 0
+  isEnemyShot: 1
+  isIce: 0
 --- !u!114 &2969060748152635372
 MonoBehaviour:
   m_ObjectHideFlags: 0

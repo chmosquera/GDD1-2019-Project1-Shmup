@@ -12,6 +12,8 @@ public class WeaponScript : MonoBehaviour
 
     private float _shootCooldown;
 
+    public Sprite icon;
+
     
     public bool CanAttack {
         get {
@@ -32,14 +34,15 @@ public class WeaponScript : MonoBehaviour
         }
     }
 
-    public void Attack(bool isEnemy) {
+    public ShotScript Attack(bool isEnemy) {
         
         if (CanAttack) {
             _shootCooldown = shootingRate;
-            var shotTransform = Instantiate(shotPrefab) as Transform;
+            Transform shotTransform = Instantiate(shotPrefab) as Transform;
 
             shotTransform.position = transform.position;
 
+            // Specify if shot belongs to enemy or not
             ShotScript shot = shotTransform.gameObject.GetComponent<ShotScript>();
             if (shot != null) {
                 shot.isEnemyShot = isEnemy;
@@ -49,7 +52,11 @@ public class WeaponScript : MonoBehaviour
             if (move != null) {
                 move.direction = this.transform.right;
             }
+
+            return shot;
         }
+
+        return null;
     }
 
 }

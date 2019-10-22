@@ -21,6 +21,7 @@ public class HealthScript : MonoBehaviour
         if (hp <= 0) {
             SpecialEffectsHelper.instance.Explosion(transform.position);
             SoundEffectsHelper.instance.MakeExplosionSound();
+            Debug.Log(this.name + " is dead");
             Destroy(gameObject);
         }
     }
@@ -55,7 +56,7 @@ public class HealthScript : MonoBehaviour
             // Avoid friendly fire
             if (shot.isEnemyShot != isEnemy) {
 
-                if (shot.isIce) {
+                if (shot.shotType == ShotType.Ice) {
                     StartCoroutine(Freeze(2f));
                 } 
                 

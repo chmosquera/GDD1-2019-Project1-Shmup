@@ -28,6 +28,7 @@ public class ScrollingScript : MonoBehaviour
                 }
             }
 
+            // Sort by position
             backgroundPart = backgroundPart.OrderBy(
               t => t.transform.position.x
             ).ToList();
@@ -38,6 +39,7 @@ public class ScrollingScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Movement
         Vector3 movement = new Vector3(
             speed.x * direction.x,
             speed.y * direction.y,

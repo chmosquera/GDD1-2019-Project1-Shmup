@@ -10,6 +10,8 @@ public class EnemyScript : MonoBehaviour
     private Collider2D colliderComponent;
     private SpriteRenderer rendererComponent;
 
+    public List<ShotScript> activeShots = new List<ShotScript>();
+
     void Awake() {
         weapons = GetComponentsInChildren<WeaponScript>();
         moveScript = GetComponent<MoveScript>();
@@ -31,35 +33,37 @@ public class EnemyScript : MonoBehaviour
         }
     }
 
-    
-    // Update is called once per frame
     void Update()
     {
 
+        // Check if enemy has spawned
         if (hasSpawned == false) {
+
+            // Entering camera view? Spawn the enemy.
             if (rendererComponent.isVisibleFrom(Camera.main)) {
                 Spawn();
-            } else {
-
-                foreach (WeaponScript weapon in weapons) {
-                    if (weapon != null && weapon.enabled && weapon.CanAttack) {
-                        weapon.Attack(true);
-                    }
-                }
-
-                // Out of the camera? destroy the game object
-                if (rendererComponent.isVisibleFrom(Camera.main) == false) {
-                    Destroy(this.gameObject);
-                }
-
-            }
+            } 
         }
+        else {
 
-        foreach (WeaponScript weapon in weapons) {
-            if (weapon != null && weapon.CanAttack) {
-                weapon.Attack(true);
+            // Clean list - Remove inactive shots
+            activeShots.RemoveAll(item => item == null);
+
+            // Auto-fire
+            foreach (WeaponScript weapon in weapons) {
+                if (weapon != null && weapon.enabled && weapon.CanAttack) {
+                    ShotScript shot = weapon.Attack(true);
+                    activeShots.Add(shot);
+                }
             }
+
+            // Out of the camera? destroy the game object
+            if (rendererComponent.isVisibleFrom(Camera.main) == false) {
+                Destroy(this.gameObject);
+            }
+
         }
+        
         
     }
 
@@ -71,5 +75,18 @@ public class EnemyScript : MonoBehaviour
         foreach (WeaponScript weapon in weapons) {
             weapon.enabled = true;
         }
+    }
+
+    void OnDestroy() {
+
+        // Destroy enemy and ALL shots fired
+        Debug.Log(this.name  + " has been destroyed.");
+        foreach (ShotScript shot in activeShots) {
+            if (shot != null) Destroy(shot.gameObject);
+        }
+
+        // Update score
+        ScoreScript.instance.score++;
+       
     }
 }

@@ -8,6 +8,7 @@ public class SpecialEffectsHelper : MonoBehaviour
 
     public ParticleSystem smokeEffect;
     public ParticleSystem fireEffect;
+    public ParticleSystem laserEffect;
 
     void Awake() {
         if (instance != null) return;
@@ -19,12 +20,16 @@ public class SpecialEffectsHelper : MonoBehaviour
         instantiate(fireEffect, position);
     }
 
+    public void Laser(Vector3 position) {
+        ParticleSystem particle = instantiate(laserEffect, position);
+
+    }
+
     private ParticleSystem instantiate(ParticleSystem prefab, Vector3 position) {
         ParticleSystem newParticleSystem = Instantiate(prefab, position, Quaternion.identity) as ParticleSystem;
 
         //Destroy(newParticleSystem.gameObject, newParticleSystem.startLifetime);
 
         return newParticleSystem;
-        
     }
 }

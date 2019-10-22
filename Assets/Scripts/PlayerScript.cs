@@ -11,8 +11,36 @@ public class PlayerScript : MonoBehaviour
     private Vector2 _movement;
     private Rigidbody2D _rbComponent;
 
+    [Header("Weapons")]
+    public List<WeaponScript> weapons = new List<WeaponScript>();
 
-    // Update is called once per frame
+    private int weaponIndex;
+    public SpriteRenderer weaponRenderer;
+
+
+
+    public WeaponScript currentWeapon {
+        get {
+            if (weaponIndex >= 0 || weaponIndex < weapons.Count) {
+                return weapons[weaponIndex];
+            } else return null;
+        }
+    }
+
+    void Start() {
+
+        weaponIndex = 0;
+
+        foreach (WeaponScript weapon in this.GetComponentsInChildren<WeaponScript>()) {
+            weapons.Add(weapon);
+        }
+
+        if (currentWeapon != null && weaponRenderer != null) {
+            weaponRenderer.sprite = currentWeapon.icon;
+        }
+    }
+
+
     void Update()
     {
         float inputX = Input.GetAxis("Horizontal");
@@ -29,27 +57,45 @@ public class PlayerScript : MonoBehaviour
         shoot |= Input.GetButtonDown("Fire2");
 
         if (shoot) {
-            WeaponScript[] weapons = GetComponentsInChildren<WeaponScript>();
-            foreach (WeaponScript weapon in weapons) {
-
-                if (weapon != null) {
-
-                    weapon.Attack(false);
-                }
+            if (currentWeapon != null) {
+                currentWeapon.Attack(false);
             }
-
+        
         }
-
-
 
     }
 
     void FixedUpdate() {
+
+        // Movement
         if (_rbComponent == null) {
             _rbComponent = GetComponent<Rigidbody2D>();
         }
 
         _rbComponent.velocity = _movement;
+
+
+        // ----------------
+        // Weapon Handling
+        // ----------------
+        // Next weapon
+        if (Input.GetAxis("Mouse ScrollWheel") > 0f) {
+            if (weaponIndex < (weapons.Count - 1)) {
+                weaponIndex++;
+                Debug.Log("next weapon: " + currentWeapon.name);
+            }
+        }
+
+        // Previous Weapon
+        if (Input.GetAxis("Mouse ScrollWheel") < 0f) {
+            if (weaponIndex > 0) {
+                weaponIndex--;
+                Debug.Log("previous weapon: " + currentWeapon.name);
+            }
+        }
+
+        // Update weapon icon
+        weaponRenderer.sprite = currentWeapon.icon;
     }
 
     void OnCollisionEnter2D(Collision2D other) {
@@ -76,5 +122,4 @@ public class PlayerScript : MonoBehaviour
         var gameOver = FindObjectOfType<GameOverScript>();
         gameOver.ShowButtons();
     }
-
 }
