@@ -17,6 +17,9 @@ public class PlayerScript : MonoBehaviour
     private int weaponIndex;
     public SpriteRenderer weaponRenderer;
 
+    public float weaponChangeRate = 1f;
+    private float weaponChangeCountDown = 0f;
+
 
 
     public WeaponScript currentWeapon {
@@ -55,6 +58,7 @@ public class PlayerScript : MonoBehaviour
         // Shooting
         bool shoot = Input.GetButtonDown("Fire1");
         shoot |= Input.GetButtonDown("Fire2");
+        shoot |= Input.GetKeyDown(KeyCode.Space);
 
         if (shoot) {
             if (currentWeapon != null) {
@@ -79,24 +83,30 @@ public class PlayerScript : MonoBehaviour
         // Weapon Handling
         // ----------------
         // Next weapon
-        if (Input.GetAxis("Mouse ScrollWheel") > 0f) {
+        
+        if (Input.GetAxis("Mouse ScrollWheel") > 0f && weaponChangeCountDown < 0) {
             if (weaponIndex < (weapons.Count - 1)) {
                 weaponIndex++;
+                weaponChangeCountDown = weaponChangeRate;
                 Debug.Log("next weapon: " + currentWeapon.name);
             }
         }
 
         // Previous Weapon
-        if (Input.GetAxis("Mouse ScrollWheel") < 0f) {
+        if (Input.GetAxis("Mouse ScrollWheel") < 0f && weaponChangeCountDown < 0) {
             if (weaponIndex > 0) {
                 weaponIndex--;
+                weaponChangeCountDown = weaponChangeRate;
                 Debug.Log("previous weapon: " + currentWeapon.name);
             }
         }
 
         // Update weapon icon
         weaponRenderer.sprite = currentWeapon.icon;
+
+        weaponChangeCountDown -= Time.deltaTime;
     }
+
 
     void OnCollisionEnter2D(Collision2D other) {
         // handle collisions with enemy

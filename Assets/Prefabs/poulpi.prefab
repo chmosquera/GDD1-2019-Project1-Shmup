@@ -46,6 +46,7 @@ MonoBehaviour:
   shotPrefab: {fileID: 2969060748547652268, guid: 260f1f38496fedd4cb37fcbc291baf6b,
     type: 3}
   shootingRate: 3
+  icon: {fileID: 0}
 --- !u!1 &461865175
 GameObject:
   m_ObjectHideFlags: 0
@@ -92,6 +93,7 @@ MonoBehaviour:
   shotPrefab: {fileID: 2969060748547652268, guid: 260f1f38496fedd4cb37fcbc291baf6b,
     type: 3}
   shootingRate: 2
+  icon: {fileID: 0}
 --- !u!1 &843488118958066005
 GameObject:
   m_ObjectHideFlags: 0
@@ -167,9 +169,9 @@ SpriteRenderer:
   m_SortingLayerID: -1309059599
   m_SortingLayer: 3
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 5c3dbc500ff5516499dcb59c40193d78, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a614f25efd0920c48b84e08a3c79bd96, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
+  m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 5.88, y: 4.14}
@@ -195,7 +197,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 5.88, y: 4.14}
+    oldSize: {x: 10, y: 10}
     newSize: {x: 5.88, y: 4.14}
     adaptiveTilingThreshold: 0.5
     drawMode: 0

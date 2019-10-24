@@ -22,6 +22,11 @@ public class HealthScript : MonoBehaviour
             SpecialEffectsHelper.instance.Explosion(transform.position);
             SoundEffectsHelper.instance.MakeExplosionSound();
             Debug.Log(this.name + " is dead");
+
+            if (isEnemy) {
+                ScoreScript.instance.score++;
+            }
+
             Destroy(gameObject);
         }
     }

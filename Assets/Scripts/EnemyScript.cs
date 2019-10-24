@@ -84,9 +84,6 @@ public class EnemyScript : MonoBehaviour
         foreach (ShotScript shot in activeShots) {
             if (shot != null) Destroy(shot.gameObject);
         }
-
-        // Update score
-        ScoreScript.instance.score++;
        
     }
 }
