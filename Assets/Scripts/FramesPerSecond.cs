@@ -1,137 +1,39 @@
 ﻿using System.Collections;
-
 using System.Threading;
-
 using UnityEngine;
 
-
 public class FramesPerSecond : MonoBehaviour
-
 {
-
-  #region Variables
-
-
-  [SerializeField] private Color textColor = Color.red;
-
-  private float TargetRate = 30.0f;
-
-
-  Rect fpsRect;
-
+  float deltaTime = 0.0f;
   GUIStyle style;
+  Rect rect;
 
-  float fps = 0.0f;
-
-  float currentFrameTime;
-
-
-  #endregion
-
-
-  #region Unity callbacks
-
-
-  //----------------------------------------------------------------------------
-
-  void Start()
-
+  private void Awake()
   {
-
-    fpsRect = new Rect(50, 50, 400, 100);
-
-    style = new GUIStyle();
-
-    style.fontSize = 30;
-
-    style.normal.textColor = textColor;
-
-
     QualitySettings.vSyncCount = 0;
 
-    Application.targetFrameRate = 9999;
+    Application.targetFrameRate = 30;
 
-    currentFrameTime = Time.realtimeSinceStartup;
+    rect = new Rect(50, 50, 400, 100);
 
+    style = new GUIStyle();
+    style.alignment = TextAnchor.UpperLeft;
+    style.fontSize = 30;
+    style.normal.textColor = new Color(1.0f, 0.0f, 0.0f, 1.0f);
 
-    StartCoroutine(RecalculateFPS());
-
-    StartCoroutine(WaitForNextFrame());
-
+    DontDestroyOnLoad(gameObject);
   }
 
-
-
-  //----------------------------------------------------------------------------
-
-  private void OnGUI()
-
+  void Update()
   {
-
-    GUI.Label(fpsRect, "FPS: " + string.Format("{0:0.0}", fps), style);
-
+    deltaTime += (Time.unscaledDeltaTime - deltaTime) * 0.1f;
   }
 
-
-  #endregion
-
-
-  #region Force And [Re]Calculate FPS
-
-
-  //----------------------------------------------------------------------------
-
-  private IEnumerator RecalculateFPS()
-
+  void OnGUI()
   {
-
-    while (true)
-
-    {
-
-      yield return new WaitForSeconds(1);
-
-      fps = 1.0f / Time.deltaTime;
-
-    }
-
+    float msec = deltaTime * 1000.0f;
+    float fps = 1.0f / deltaTime;
+    string text = string.Format("{0:0.0} ms ({1:0.} fps)", msec, fps);
+    GUI.Label(rect, text, style);
   }
-
-
-
-  //----------------------------------------------------------------------------
-
-  private IEnumerator WaitForNextFrame()
-
-  {
-
-    while (true)
-
-    {
-
-      yield return new WaitForEndOfFrame();
-
-      currentFrameTime += 1.0f / TargetRate;
-
-      var t = Time.realtimeSinceStartup;
-
-      var sleepTime = currentFrameTime - t - 0.01f;
-
-
-      if (sleepTime > 0)
-
-        Thread.Sleep((int)(sleepTime * 1000));
-
-
-      while (t < currentFrameTime)
-
-        t = Time.realtimeSinceStartup;
-
-    }
-
-  }
-
-
-  #endregion
-
 }
